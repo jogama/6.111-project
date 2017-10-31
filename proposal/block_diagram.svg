@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="744.09448819"
+   height="1052.3622047"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="New document 1.2017_10_31_13_55_40.0.svg">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.35"
+     inkscape:cx="375"
+     inkscape:cy="634.28571"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     showborder="false"
+     inkscape:window-width="1855"
+     inkscape:window-height="1056"
+     inkscape:window-x="65"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:#00ff00;fill-opacity:0.06392697000000000;stroke:#fe0000;stroke-width:5;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect3027"
+       width="985.71429"
+       height="494.28571"
+       x="-1145.7142"
+       y="-210.49496" />
+    <path
+       style="fill:#00ff00;fill-opacity:0.06392697;stroke:#fe0000;stroke-width:5;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m -1141,36.362183 0,-242.857143 488.57143,0 488.57143,0 0,242.857143 0,242.857147 -488.57143,0 -488.57143,0 0,-242.857147 z"
+       id="path3029"
+       inkscape:connector-curvature="0" />
+    <rect
+       style="fill:#00ff00;fill-opacity:0.06392697;stroke:#fe0000;stroke-width:5;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect3031"
+       width="365.71429"
+       height="360"
+       x="-1022.8571"
+       y="-764.7807" />
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="-928.57141"
+       y="-664.78064"
+       id="text3033"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3035"
+         x="-928.57141"
+         y="-664.78064">Convert </tspan><tspan
+         sodipodi:role="line"
+         x="-928.57141"
+         y="-614.78064"
+         id="tspan3037">data</tspan><tspan
+         sodipodi:role="line"
+         x="-928.57141"
+         y="-564.78064"
+         id="tspan3039">to </tspan><tspan
+         sodipodi:role="line"
+         x="-928.57141"
+         y="-514.78064"
+         id="tspan3043">centimeters</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="-1017.1429"
+       y="-104.78067"
+       id="text3047"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3049"
+         x="-1017.1429"
+         y="-104.78067">FORWARD CONTROLLER</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="-728.57141"
+       y="-19.066389"
+       id="text3085"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3087"
+         x="-728.57141"
+         y="-19.066389" /></text>
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="-1008.1322"
+       y="-10.318295"
+       id="text3099"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3101"
+         x="-1008.1322"
+         y="-10.318295">wheel_l = speed * sum(p_i * r_i for i in [0,n/2]</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="-1036.4165"
+       y="98.778183"
+       id="text3105"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3107"
+         x="-1036.4165"
+         y="98.778183">wheel_r = speed * sum(p_i * r_i for i in [n/2, n]</tspan></text>
+    <rect
+       style="fill:#00ff00;fill-opacity:0.06392697;stroke:#fe0000;stroke-width:5;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect3109"
+       width="1022.2744"
+       height="428.30469"
+       x="-1196.0206"
+       y="420.00668" />
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="-1076.8226"
+       y="472.53461"
+       id="text3111"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3113"
+         x="-1076.8226"
+         y="472.53461">TASK MANAGER</tspan></text>
+    <rect
+       style="fill:#00ff00;fill-opacity:0.06392697;stroke:#fe0000;stroke-width:5;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect3115"
+       width="913.17792"
+       height="339.41125"
+       x="299.00516"
+       y="436.16913" />
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="398.00009"
+       y="492.73767"
+       id="text3117"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3119"
+         x="398.00009"
+         y="492.73767">REWIND CONTROLLER</tspan></text>
+    <rect
+       style="fill:#00ff00;fill-opacity:0.06392697;stroke:#fe0000;stroke-width:5;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect3121"
+       width="369.71582"
+       height="367.69553"
+       x="-1143.4927"
+       y="1133.1744" />
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="-1086.9241"
+       y="1185.7023"
+       id="text3123"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3125"
+         x="-1086.9241"
+         y="1185.7023">PWM </tspan><tspan
+         sodipodi:role="line"
+         x="-1086.9241"
+         y="1235.7023"
+         id="tspan3127">CONVERTER</tspan></text>
+    <path
+       sodipodi:type="arc"
+       style="fill:#000000;fill-opacity:0.06392697;stroke:#fe0000;stroke-width:5;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="path3088"
+       sodipodi:cx="-475.71429"
+       sodipodi:cy="-1271.9236"
+       sodipodi:rx="167.14285"
+       sodipodi:ry="115.71429"
+       d="m -308.57144,-1271.9236 a 167.14285,115.71429 0 1 1 -334.28571,0 167.14285,115.71429 0 1 1 334.28571,0 z" />
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="-528.57141"
+       y="-1313.3521"
+       id="text3090"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3092"
+         x="-528.57141"
+         y="-1313.3521">qtty n</tspan><tspan
+         sodipodi:role="line"
+         x="-528.57141"
+         y="-1263.3521"
+         id="tspan3094">sensors</tspan></text>
+    <path
+       sodipodi:type="arc"
+       style="fill:#000000;fill-opacity:0.06392697;stroke:#fe0000;stroke-width:5;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="path3096"
+       sodipodi:cx="-974.28571"
+       sodipodi:cy="-1237.6378"
+       sodipodi:rx="142.85715"
+       sodipodi:ry="104.28571"
+       d="m -831.42856,-1237.6378 a 142.85715,104.28571 0 1 1 -285.71434,0 142.85715,104.28571 0 1 1 285.71434,0 z" />
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="-1040"
+       y="-1261.9235"
+       id="text3098"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         x="-1040"
+         y="-1261.9235"
+         id="tspan3102">button</tspan></text>
+  </g>
+</svg>
