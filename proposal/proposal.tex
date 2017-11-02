@@ -1,4 +1,10 @@
 \documentclass{article}
+
+\usepackage{graphicx}
+\usepackage{rotating}
+\usepackage{mathtools}
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+\DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}
 \title{Obstacle Avoiding Mobile Vehicle with Rewind}
 \author{Jonathan A. Garcia-Mallen}
 \date{31 October 2017}
@@ -13,15 +19,26 @@ The goal is to have a robot go forward and avoid any obstacles in the way. After
 
 ADD OVERVIEW OF THIS DOCUMENT. 
 \section*{System Architecture} 
-THESE ARE THE FICE THINGS
+THESE ARE THE FIVE THINGS
 % For each subsection: 
 %   inputs
 %   outputs
 %   what it does / its purpose
+
+\includegraphics[width=\textwidth]{block_diagram.png}
+
 \subsection*{System Inputs}
 \subsection*{Forward Controller}
+\begin{equation}
+wheel\_l = speed * (\sum_{i=0}^{\floor{n/2}}{p_ir_i}) \end{equation}
+\begin{equation}wheel\_r = speed * (\sum_{i=\ceil{n/2}}^{n}{p_ir_i})
+\end{equation}
 \subsection*{Rewind Controller and Memory}
 \subsection*{PWM Converter and System Outputs}
+\begin{turn}{180} 
+  % system photo viewer sees an upright photo. Latex doesn't. 
+  \includegraphics[width=\textwidth]{chassis.jpg}
+\end{turn}
 \subsection*{Task Manager} 
 
 \section*{Complexity Analysis}
