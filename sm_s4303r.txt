@@ -1,0 +1,15 @@
+# pwm max measured at 4.8V, min at 0.0V
+
+# freq in Hz
+frequency=440
+
+# period in microseconds
+period=2273
+
+# appxoximate duty cycle, in %, for zero rotation
+# max is counterclockwise
+max_duty=80
+zero=duty=60
+# fifty min duty also worked
+# min is clockwise
+min_duty=40 
