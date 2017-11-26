@@ -2,6 +2,9 @@ vivado*
 proposal/auto*
 ise*
 
+# Compiled code and dumpfiles live here
+tests/sim/*
+
 # for latex and markdown
 *.aux
 *.log
