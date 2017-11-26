@@ -1,2 +1,9 @@
 vivado*
 proposal/auto*
+ise*
+
+# for latex and markdown
+*.aux
+*.log
+*.pdf
+*.html
