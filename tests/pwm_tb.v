@@ -18,7 +18,7 @@ module pwm_tb;
    wire      out;
 
    // Instantiate the Unit Under Test (UUT)
-   pwm uut (
+   pwm #(.PERIOD('d100), .ONE_PCT_PERIOD('d1)) uut (
 	    .reset(reset), 
 	    .clk(clk), 
 	    .one_MHz_enable(one_MHz_enable), 
@@ -26,49 +26,49 @@ module pwm_tb;
 	    .out(out)
 	    );
 
-   reg one_MHz_clk;
-   initial forever #10  clk = ~clk;
-   initial forever #100 one_MHz_clk = ~one_MHz_clk; // this fine for simulation
+   initial forever #1  clk = ~clk;
+   initial forever #100 one_MHz_enable = ~one_MHz_enable; // this fine for simulation
    initial begin
       // for gtkwave simulation
       $dumpfile("pwm_tb.vcd");
-      $dumpvars(0,duty_cycle, one_MHz_clk, clk, out);
+      $dumpvars(0,duty_cycle, one_MHz_enable, clk, out, reset);
       
       // Initialize Inputs
       clk = 0;
-      one_MHz_clk = 0;
-      reset = 0;
+      one_MHz_enable = 0;
+      reset = 1;
       duty_cycle = 0;
 
       // Wait 100 ns for global reset to finish
       #100;
       
       // Add stimulus here
+      reset = 0;
       
       // test with 100% duty cycle
       duty_cycle = 7'd100;
-      #1000;
+      #3000;
       
       // test with 50% duty cycle
       duty_cycle = 7'd50;
-      #1000;
+      #3000;
       
       
       // test with 25% duty cycle
       duty_cycle = 7'd25;
-      #1000;
+      #3000;
             
       // test with 10% duty cycle
       duty_cycle = 7'd10;
-      #1000;
+      #3000;
             
       // test with 60% duty cycle
       duty_cycle = 7'd60;
-      #1000;      
+      #3000;      
       
       // test with 80% duty cycle
       duty_cycle = 7'd80;
-      #1000;
+      #3000;
 
       // we're done!
       $stop();
