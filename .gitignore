@@ -1,12 +1,29 @@
-vivado*
-proposal/auto*
+# Remember that this file needs a trailing newline!
+
+# see log for commit 3a16303. That idea didn't work, hence this exclusion.
+# then see https://stackoverflow.com/questions/5533050/gitignore-exclude-folder-but-include-specific-subfolder#5534865
+vivado/*
+!vivado/project.srcs/
+vivado/project.srcs/*
+!vivado/project.srcs/sources_1/
+vivado/project.srcs/sources_1/*
+!vivado/project.srcs/sources_1/imports/
+vivado/project.srcs/sources_1/imports/*
+!vivado/project.srcs/sources_1/imports/src/
+
+
 ise*
 
 # Compiled code and dumpfiles live here
 tests/sim/*
 
 # for latex and markdown
+proposal/auto*
 *.aux
 *.log
 *.pdf
 *.html
+
+
+!vivado/project.srcs/sources_1/imports/src*
+
