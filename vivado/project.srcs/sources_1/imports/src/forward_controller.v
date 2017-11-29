@@ -27,7 +27,7 @@ inputs:
 
 module forward_controller #(parameter SENSOR_COUNT='d2)
    (input reset, clk, enable,
-    //speed goes here. idk what width.
+    input [SENSOR_COUNT:0] speed, // TODO: this is not the correct width. See speed description above. 
     input [SENSOR_COUNT-1:0] sensor_array,
     output reg signed [7:0]  wheel_left, wheel_right);
 
@@ -79,6 +79,7 @@ endmodule // forward_controller
   */
 
 module bangbang_controller(input reset, clk, enable, sensor_right, sensor_left,
+			   input [5:0] speed, // I just guessed this width
 			   output signed [7:0] wheel_left, wheel_right);
 
    // This is bangbang control. It's on or it's off. 
