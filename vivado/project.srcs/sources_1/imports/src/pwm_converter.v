@@ -67,7 +67,7 @@ module pwm_converter #(parameter FLIPPED=1'b0,
 		       parameter ZERO=7'd60)
    (input reset, input clk, input one_MHz_enable,
     input signed [7:0] wheel_cmd, 
-    output reg 	       wheel_signal);
+    output  	       wheel_signal);
    
    wire [6:0] duty_cycle;
 

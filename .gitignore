@@ -24,6 +24,10 @@ proposal/auto*
 *.pdf
 *.html
 
+# locks, though this should be global gitignore
+.#*
+
+*a.out
 
 !vivado/project.srcs/sources_1/imports/src*
 

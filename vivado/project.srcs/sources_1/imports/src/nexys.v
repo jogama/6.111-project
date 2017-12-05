@@ -34,15 +34,15 @@ module nexys(
    assign SEG[7] = 1'b1;
 
    // INSTANTIATE WIRES and REGISTERS
-   wire reset, oneHz_enable, oneMHz_enable, wheel_left, wheel_right;
+   wire reset, oneHz_enable, oneMHz_enable, wheel_signal_left, wheel_signal_right;
    wire [1:0] sensor_input;
-   wire [4:0] speed;
+   wire [5:0] speed;
    
    // ASSIGN NEXYS INPUTS AND OUTPUTS and debounce them
-   assign JD[1:0] = {wheel_left, wheel_right};
+   assign JD[1:0] = {wheel_signal_left, wheel_signal_right};
    assign JD[3:2] = 2'bZ;
-   sensor_input = JD[3:2]; // we only have two sensors at the moment. 
-   assign speed = SW[11:15];
+   assign sensor_input = JD[3:2]; // we only have two sensors at the moment. 
+   assign speed = SW[15:10];
    assign reset = SW[0];
   
    // HANDLE INPUTS. TODO: synchronize switches
@@ -52,11 +52,13 @@ module nexys(
 		.noisy(sensor_input[0]), .clean(sensor_left));
    debounce srd(.reset(reset), .clock(clock_25mhz), 
 		.noisy(sensor_input[1]), .clean(sensor_right));
-   bangbang fc(.reset(reset), .clk(clock_25mhz), .enable(1),//TODO: task manager
-	       .sensor_right(sensor_right), .sensor_left(sensor_left), .speed(speed)
-	       .wheel_left(wcmd_l), .wheel_right(wcmd_r));
-   pwm converter_l(.reset(reset), .clk(clock_25mhz), .one_MHz_enable(oneMHz_enable),
-		 .duty_cycle(SHIFT 
+   bangbang_controller fc(.reset(reset), .clk(clock_25mhz), .enable(SW['d2]),//TODO: task manager
+	       .sensor_right(sensor_right), .sensor_left(sensor_left), .speed(speed),
+	       .wheel_left(wcmd_fwd_l), .wheel_right(wcmd_fwd_l));
+   pwm_converter converter_l(.reset(reset), .clk(clock_25mhz),
+		   .one_MHz_enable(oneMHz_enable), .wheel_cmd(wcmd_fwd_l),
+		   .wheel_signal(wheel_signal_left));
+   
    
    // HANDLE OUTPUTS
    

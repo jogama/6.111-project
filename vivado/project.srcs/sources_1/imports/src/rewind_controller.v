@@ -1,8 +1,22 @@
-module rewind_controller(input reset, clk_main, clk_sample, enable,
-			 input signed [7:0]   wheel_cmd, // wheel command from memory
-			 output [LOGSIZE-1:0] mem_addr,
-			 output signed [7:0]  wheel_left, wheel_right);
-   
+/* 
+ 
+ The width is 16, and each entry in the memory is {wheel_command_left,
+ wh_cmd_r}, where the wheel commands are eight bits each.
+ 
+ The maximum refresh rate for our sensors is 390Hz. This will be the
+ motor command sample rate.
+ 
+ We assume a maximum recording time of 15 seconds, so we want 
+   log(390 * 15) = 13 rows, roundabout. 
+ */
+
+module rewind_controller #(parameter LOGSIZE=13)
+   (input reset, clk_main, clk_sample, enable,
+    input signed [7:0] 	 wheel_cmd, // wheel command from memory
+    output [LOGSIZE-1:0] mem_addr,
+    output signed [7:0]  wheel_left, wheel_right);
+			   
+endmodule   
 
 /* 
   Module written by staff for lab5
