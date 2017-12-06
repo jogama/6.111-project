@@ -76,13 +76,13 @@ module nexys_tb;
    // Set registers for simulation
    integer count;
    
-   // Set clocks
+   // Set clock with 2ns period
    initial forever #1  CLK100MHZ = ~CLK100MHZ;
    
    initial begin
       // for gtkwave simulation
       $dumpfile("nexys_tb.vcd");
-      $dumpvars(0, CLK100MHZ, speed, sensors, wheel_signal_l, wheel_signal_right);
+      $dumpvars(0, CLK100MHZ, speed, sensors, wheel_signal_l, wheel_signal_r, count);
       
       // Initialize Inputs
       CLK100MHZ = 0;
@@ -99,18 +99,24 @@ module nexys_tb;
       
       // Add stimulus here
 
-      // Test speed. Speed width is 6 throughout, at the moment.
-      sensors = 0;      
+      $display("Testing speed"); // Speed width is 6 throughout, at the moment."
+      sensors = 0; // All sensors detect nothing, so both wheels should move 
       for(count = 0; count < 64; count = count + 4) begin
+	 // We should see the duty cycle for one wheel increase as the other decreases,
+	 // as one wheel is flipped. 
 	 speed = count;
+	 #3000;
       end
 
-      // Test sensors at constant speed
+      $display("Testing sensors at constant speed = 32");
       speed = 32;
+      count = 0;
       for(count = 0; count < SENSOR_COUNT; count = count + 1) begin
 	 sensors = count;
+	 #10;
       end
+      
+      $stop();
    end
-   
 endmodule
 
