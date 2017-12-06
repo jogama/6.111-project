@@ -43,7 +43,6 @@ module nexys(
    assign JD[3:2] = 2'bZ;
    assign sensor_input = JD[3:2]; // we only have two sensors at the moment. 
    assign speed = SW[15:10];
-   assign reset = SW[0];
   
    // HANDLE INPUTS. TODO: synchronize switches
    wire [7:0] wcmd_fwd_r, wcmd_fwd_l; // wheel commands from forward controller, right and left
@@ -52,12 +51,18 @@ module nexys(
 		.noisy(sensor_input[0]), .clean(sensor_left));
    debounce srd(.reset(reset), .clock(clock_25mhz), 
 		.noisy(sensor_input[1]), .clean(sensor_right));
-   bangbang_controller fc(.reset(reset), .clk(clock_25mhz), .enable(SW['d2]),//TODO: task manager
+   synchronize sr(.clk(clock_25mhz), .in(SW[15]), .out(reset));
+
+
+   bangbang_controller fc(.reset(reset), .clk(clock_25mhz), .enable(SW[1]),//TODO: task manager
 	       .sensor_right(sensor_right), .sensor_left(sensor_left), .speed(speed),
-	       .wheel_left(wcmd_fwd_l), .wheel_right(wcmd_fwd_l));
+	       .wheel_left(wcmd_fwd_l), .wheel_right(wcmd_fwd_r));
    pwm_converter converter_l(.reset(reset), .clk(clock_25mhz),
 		   .one_MHz_enable(oneMHz_enable), .wheel_cmd(wcmd_fwd_l),
 		   .wheel_signal(wheel_signal_left));
+   pwm_converter converter_r(.reset(reset), .clk(clock_25mhz),
+		   .one_MHz_enable(oneMHz_enable), .wheel_cmd(wcmd_fwd_r),
+		   .wheel_signal(wheel_signal_right));
    
    
    // HANDLE OUTPUTS
@@ -66,8 +71,6 @@ module nexys(
    pwm test(.reset(reset), .clk(clock_25mhz), .one_MHz_enable(oneMHz_enable),
 	    .duty_cycle(SW[6:0]), .out(wheel_port));
    
-   // synchronize inputs from switches to avoid metastability. 
-   synchronize sr(.clk(clock_25mhz), .in(SW[15]), .out(reset));
 
    // Have the 1MHz enable go high one clock cycle per microsecond
    divider #(.DIVISION_PERIOD('d25)) once_per_microsecond

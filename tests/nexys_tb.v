@@ -64,14 +64,25 @@ module nexys_tb;
 	      .SEG(SEG), 
 	      .AN(AN)
 	      );
+   // Set input and output wires/registers
+   parameter SENSOR_COUNT = 2;
+   wire wheel_signal_l, wheel_signal_r;
+   reg [1:0] sensors; // MSB is leftmost sensor
+   reg [5:0] speed;
 
+   assign wheel_signal_l = JD[0];
+   assign wheel_signal_r = JD[1];
+
+   // Set registers for simulation
+   integer count;
+   
    // Set clocks
    initial forever #1  CLK100MHZ = ~CLK100MHZ;
    
    initial begin
       // for gtkwave simulation
       $dumpfile("nexys_tb.vcd");
-      $dumpvars(0, CLK100MHZ, JD);
+      $dumpvars(0, CLK100MHZ, speed, sensors, wheel_signal_l, wheel_signal_right);
       
       // Initialize Inputs
       CLK100MHZ = 0;
@@ -87,8 +98,18 @@ module nexys_tb;
       #100;
       
       // Add stimulus here
-      
 
+      // Test speed. Speed width is 6 throughout, at the moment.
+      sensors = 0;      
+      for(count = 0; count < 64; count = count + 4) begin
+	 speed = count;
+      end
+
+      // Test sensors at constant speed
+      speed = 32;
+      for(count = 0; count < SENSOR_COUNT; count = count + 1) begin
+	 sensors = count;
+      end
    end
    
 endmodule
