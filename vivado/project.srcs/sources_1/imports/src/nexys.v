@@ -11,7 +11,7 @@ module nexys(
 	     output [3:0]  VGA_R, 
 	     output [3:0]  VGA_B, 
 	     output [3:0]  VGA_G,
-	     output [7:0]  JA,
+	     output [7:0]  JA, // debugging output
 	     output 	   VGA_HS, 
 	     output 	   VGA_VS, 
 	     output 	   LED16_B, LED16_G, LED16_R,
