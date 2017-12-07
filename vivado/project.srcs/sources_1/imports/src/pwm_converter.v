@@ -64,12 +64,19 @@ endmodule // pwm
 
 
 module pwm_converter #(parameter FLIPPED=1'b0,
-		       parameter ZERO=7'd60)
+		       parameter ZERO=7'd60,
+		       parameter PERIOD_WIDTH='d12,
+		       parameter PERIOD='d2273, 
+		       parameter ONE_PCT_PERIOD='d23)
    (input reset, input clk, input one_MHz_enable,
-    input signed [7:0] wheel_cmd, 
-    output  	       wheel_signal);
+    input signed [7:0] 	wheel_cmd, 
+    output 		wheel_signal, 
+    // below outputs are for debugging; they should be removed
+    output [6:0] 	duty_cycle,
+    output signed [5:0] wheel_cmd_fourthed
+    );
    
-   wire [6:0] duty_cycle;
+//   wire [6:0] duty_cycle;
 
    // this feels quite dirty
    // What we really want is duty_cycle = wheel_cmd*(50/127)+60, or something along those lines,
@@ -80,12 +87,13 @@ module pwm_converter #(parameter FLIPPED=1'b0,
    //   2. prevent overflow when adding 'd60
    
    // then add 'd60
-   wire signed [5:0] wheel_cmd_fourthed = wheel_cmd <<< 4;
-   
+//   wire signed [5:0] wheel_cmd_fourthed = wheel_cmd >>> 2;
+   assign wheel_cmd_fourthed = wheel_cmd >>> 2;   
    assign duty_cycle = // FLIPPED ? we aren't implementing flipped right now
 		       wheel_cmd_fourthed + ZERO;
    
    // later perhaps add parameters to pwm_wheel_cmd. These would be passed here to 
-   pwm p(.reset(reset), .clk(clk), .one_MHz_enable(one_MHz_enable),
+   pwm #(.PERIOD_WIDTH(PERIOD_WIDTH), .PERIOD(PERIOD), .ONE_PCT_PERIOD(ONE_PCT_PERIOD))
+     p(.reset(reset), .clk(clk), .one_MHz_enable(one_MHz_enable),
 	 .duty_cycle(duty_cycle), .out(wheel_signal));
 endmodule // pwm_converter

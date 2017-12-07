@@ -18,7 +18,8 @@ module pwm_tb;
    wire      out;
 
    // Instantiate the Unit Under Test (UUT)
-   pwm #(.PERIOD('d100), .ONE_PCT_PERIOD('d1)) uut (
+   pwm #(.PERIOD('d100), .ONE_PCT_PERIOD('d1)) 
+   uut (
 	    .reset(reset), 
 	    .clk(clk), 
 	    .one_MHz_enable(one_MHz_enable), 
@@ -31,7 +32,7 @@ module pwm_tb;
    initial begin
       // for gtkwave simulation
       $dumpfile("pwm_tb.vcd");
-      $dumpvars(0,duty_cycle, one_MHz_enable, clk, out, reset);
+      $dumpvars(0,duty_cycle, one_MHz_enable, clk, out);
       
       // Initialize Inputs
       clk = 0;
@@ -44,31 +45,11 @@ module pwm_tb;
       
       // Add stimulus here
       reset = 0;
-      
-      // test with 100% duty cycle
-      duty_cycle = 7'd100;
-      #3000;
-      
-      // test with 50% duty cycle
-      duty_cycle = 7'd50;
-      #3000;
-      
-      
-      // test with 25% duty cycle
-      duty_cycle = 7'd25;
-      #3000;
-            
-      // test with 10% duty cycle
-      duty_cycle = 7'd10;
-      #3000;
-            
-      // test with 60% duty cycle
-      duty_cycle = 7'd60;
-      #3000;      
-      
-      // test with 80% duty cycle
-      duty_cycle = 7'd80;
-      #3000;
+
+      for(duty_cycle = 0; duty_cycle <= 'd100; duty_cycle = duty_cycle + 'd15) begin
+	 $display("test with %d per cent duty cycle", duty_cycle);
+	 #3000;
+      end
 
       // we're done!
       $stop();

@@ -10,7 +10,7 @@ VVP="$NAME.vvp"
 VCD="$NAME.vcd"
 
 # assuming we're in directory project/tests
-iverilog "$1" \
+iverilog -W all "$1" \
     ../vivado/project.srcs/sources_1/imports/src/* \
     -o "sim/$VVP"
 

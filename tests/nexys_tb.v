@@ -117,6 +117,7 @@ module nexys_tb;
       end
       
       $stop();
+      $finish();
    end
 endmodule
 
