@@ -82,7 +82,7 @@ module nexys_tb;
    initial begin
       // for gtkwave simulation
       $dumpfile("nexys_tb.vcd");
-      $dumpvars(0, CLK100MHZ, speed, sensors, wheel_signal_l, wheel_signal_r, count);
+      $dumpvars(0, nexys_tb);
       
       // Initialize Inputs
       CLK100MHZ = 0;

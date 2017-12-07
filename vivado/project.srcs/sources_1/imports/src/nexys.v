@@ -57,20 +57,14 @@ module nexys(
    bangbang_controller fc(.reset(reset), .clk(clock_25mhz), .enable(SW[1]),//TODO: task manager
 	       .sensor_right(sensor_right), .sensor_left(sensor_left), .speed(speed),
 	       .wheel_left(wcmd_fwd_l), .wheel_right(wcmd_fwd_r));
+   
    pwm_converter converter_l(.reset(reset), .clk(clock_25mhz),
 		   .one_MHz_enable(oneMHz_enable), .wheel_cmd(wcmd_fwd_l),
 		   .wheel_signal(wheel_signal_left));
+   
    pwm_converter converter_r(.reset(reset), .clk(clock_25mhz),
 		   .one_MHz_enable(oneMHz_enable), .wheel_cmd(wcmd_fwd_r),
-		   .wheel_signal(wheel_signal_right));
-   
-   
-   // HANDLE OUTPUTS
-   
-   // INSTANTIATE MODULES
-   pwm test(.reset(reset), .clk(clock_25mhz), .one_MHz_enable(oneMHz_enable),
-	    .duty_cycle(SW[6:0]), .out(wheel_port));
-   
+		   .wheel_signal(wheel_signal_right));   
 
    // Have the 1MHz enable go high one clock cycle per microsecond
    divider #(.DIVISION_PERIOD('d25)) once_per_microsecond
@@ -78,12 +72,7 @@ module nexys(
      (.clk(clock_25mhz), .clk_divided(oneMHz_enable));
 
    // handle outputs
-   assign data = {32'hc0ffeeee};   // display coffeee 
-
-   // DEBUG INPUT TO NEXYS
-   assign LED16_B = JB[0];
-   assign LED16_R = ~JB[0];
-
+   assign data = {24'hc0ffee, 2'b0, speed};   // display coffeee 
 endmodule // nexys
 
 module clock_quarter_divider(input clk100_mhz, output reg clock_25mhz = 0);
