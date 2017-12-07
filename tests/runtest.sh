@@ -1,14 +1,21 @@
+# verify input
+if [ "$1" = "" ] ; then
+    echo "You must provide one verilog source as input."
+    exit 0
+fi   
+
 # remove file extension
-NAME=$(echo "$1" | cut -f 1 -d '.') # thanks, stackoverflow
+NAME=$(echo "$1" | cut -f 1 -d '.') # thanks stackoverflow
 VVP="$NAME.vvp"
 VCD="$NAME.vcd"
 
 # assuming we're in directory project/tests
 iverilog "$1" \
-    ~/6.111/project/vivado/project.srcs/sources_1/imports/src/* \
-    -o "VVP/$sim"
+    ../vivado/project.srcs/sources_1/imports/src/* \
+    -o "sim/$VVP"
 
-xterm -e "vvp sim/$VVP" &
+cd sim
+xterm -e "vvp $VVP" &
 sleep 2
 xterm -e "gtkwave $VCD" &
 
