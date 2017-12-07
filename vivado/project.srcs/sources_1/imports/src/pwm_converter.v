@@ -70,14 +70,9 @@ module pwm_converter #(parameter FLIPPED=1'b0,
 		       parameter ONE_PCT_PERIOD='d23)
    (input reset, input clk, input one_MHz_enable,
     input signed [7:0] 	wheel_cmd, 
-    output 		wheel_signal, 
-    // below outputs are for debugging; they should be removed
-    output [6:0] 	duty_cycle,
-    output signed [5:0] wheel_cmd_fourthed
+    output 		wheel_signal
     );
    
-//   wire [6:0] duty_cycle;
-
    // this feels quite dirty
    // What we really want is duty_cycle = wheel_cmd*(50/127)+60, or something along those lines,
    // because wheel_cmd is 8-bits signed over (-127, 127) and duty_cycle is 6 bits representing a
@@ -87,9 +82,8 @@ module pwm_converter #(parameter FLIPPED=1'b0,
    //   2. prevent overflow when adding 'd60
    
    // then add 'd60
-//   wire signed [5:0] wheel_cmd_fourthed = wheel_cmd >>> 2;
-   assign wheel_cmd_fourthed = wheel_cmd >>> 2;   
-   assign duty_cycle = // FLIPPED ? we aren't implementing flipped right now
+   wire signed [5:0] wheel_cmd_fourthed = wheel_cmd >>> 2;
+   wire [6:0] duty_cycle = // FLIPPED ? we aren't implementing flipped right now
 		       wheel_cmd_fourthed + ZERO;
    
    // later perhaps add parameters to pwm_wheel_cmd. These would be passed here to 

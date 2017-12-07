@@ -17,10 +17,6 @@ module pwm_converter_tb;
 
    // Outputs
    wire wheel_signal;
-
-   // Ouptuts for debugging
-   wire signed [5:0] wcmd4;
-   wire [6:0] 	     duty;
    
    // Instantiate the Unit Under Test (UUT)
    pwm_converter #(.FLIPPED(1'b1), .ZERO(7'd60), .PERIOD('d100), .ONE_PCT_PERIOD('d1)) 
@@ -28,18 +24,16 @@ module pwm_converter_tb;
 	.clk(clk), 
 	.one_MHz_enable(one_MHz_enable),
 	.wheel_cmd(wheel_cmd),
-	.wheel_signal(wheel_signal),
-   // below outputs are for debugging; they should be removed						   
-	.wheel_cmd_fourthed(wcmd4),
-        .duty_cycle(duty)
+	.wheel_signal(wheel_signal)
 	);
 
    initial forever #1  clk = ~clk;
    initial forever #100 one_MHz_enable = ~one_MHz_enable; // this fine for simulation
    initial begin
-      // for gtkwave simulation
+      // for gtkwave simulation. 
+      // We pass in the module name into $dumpvars to dump everything under the module.
       $dumpfile("pwm_converter_tb.vcd");
-      $dumpvars(0, one_MHz_enable, clk, wheel_cmd, wheel_signal, wcmd4, duty);
+      $dumpvars(0, pwm_converter_tb);
       
       // Initialize Inputs
       clk = 0;
@@ -47,7 +41,12 @@ module pwm_converter_tb;
       reset = 1;
       wheel_cmd = 0;
 
+      // Wait 100 ns for global reset to finish
+      #100;
+      
       // Add stimuli
+      reset = 0;
+      
       // iterate eight times. 
       for(wheel_cmd = -8'd128; 
 	  wheel_cmd < 8'sd96;  // 128 is out of range; use 128 - 32
