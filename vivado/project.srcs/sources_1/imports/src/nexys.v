@@ -41,8 +41,8 @@ module nexys(
    // ASSIGN NEXYS INPUTS AND OUTPUTS and debounce them
    assign JD[1:0] = {wheel_signal_left, wheel_signal_right};
    assign JD[3:2] = 2'bZ;
-   assign sensor_input = JD[3:2]; // we only have two sensors at the moment. 
-   assign speed = SW[15:10];
+// assign sensor_input = JD[3:2]; // we only have two sensors at the moment. 
+   assign speed = SW[5:0];
   
    // HANDLE INPUTS. TODO: synchronize switches
    wire [7:0] wcmd_fwd_r, wcmd_fwd_l; // wheel commands from forward controller, right and left
@@ -54,8 +54,8 @@ module nexys(
    synchronize sr(.clk(clock_25mhz), .in(SW[15]), .out(reset));
 
 
-   bangbang_controller fc(.reset(reset), .clk(clock_25mhz), .enable(SW[1]),//TODO: task manager
-	       .sensor_right(sensor_right), .sensor_left(sensor_left), .speed(speed),
+   bangbang_controller fc(.reset(reset), .clk(clock_25mhz), .enable(SW[14]),//TODO: task manager
+	       .sensor_right(sensor_right||BTNR), .sensor_left(sensor_left||BTNL), .speed(speed),
 	       .wheel_left(wcmd_fwd_l), .wheel_right(wcmd_fwd_r));
    
    pwm_converter converter_l(.reset(reset), .clk(clock_25mhz),
@@ -72,7 +72,10 @@ module nexys(
      (.clk(clock_25mhz), .clk_divided(oneMHz_enable));
 
    // handle outputs
-   assign data = {24'hc0ffee, 2'b0, speed};   // display coffeee 
+   assign data = {24'hc0ffee, 2'b0, speed};   // display coffeee + speed
+   assign LED16_G = sensor_left || BTNL;
+   assign LED17_G = sensor_right|| BTNR;
+   
 endmodule // nexys
 
 module clock_quarter_divider(input clk100_mhz, output reg clock_25mhz = 0);

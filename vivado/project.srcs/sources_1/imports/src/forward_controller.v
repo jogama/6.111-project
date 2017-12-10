@@ -86,7 +86,7 @@ module bangbang_controller(input reset, clk, enable, sensor_right, sensor_left,
 
    // turn sharp left if both sensors are high. 
    // TODO: add state to turn more in same direction when both sensors become high. 
-   assign wheel_left  = sensor_left  * speed * (-(sensor_left&sensor_right));
-   assign wheel_right = sensor_right * speed;
+   assign wheel_left  = enable ? sensor_left  * speed * (-(sensor_left&sensor_right)) : 7'sb0;
+   assign wheel_right = enable ? sensor_right * speed : 7'sb0;
    
 endmodule   
