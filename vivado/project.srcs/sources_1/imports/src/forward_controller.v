@@ -93,9 +93,10 @@ module bangbang_controller(input reset, clk, enable, sensor_right, sensor_left,
    reg signed [2:0] ctrl_l;
    reg signed [2:0] ctrl_r;   
    
-   // TODO: add state to turn more in same direction when both sensors become high. 
-   assign wheel_left  = enable ? ctrl_l * speed : 7'sb0;
-   assign wheel_right = enable ? ctrl_r * speed : 7'sb0;
+   // to convert positive unsigned to positive signed, just pad with a zero
+   wire signed [6:0] speed_signed = {0'b1, speed};
+   assign wheel_left  = enable ? ctrl_l * speed_signed : 7'sb0;
+   assign wheel_right = enable ? ctrl_r * speed_signed : 7'sb0;
 
    always @ (posedge clk) begin
       if(reset)
