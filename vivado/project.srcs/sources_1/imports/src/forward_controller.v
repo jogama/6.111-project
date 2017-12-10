@@ -70,9 +70,10 @@ endmodule // forward_controller
 
 /* bangbang controller: 
  
- dead simple controller just to get things moving. The primary
+ very simple controller just to get things moving. The primary
  simplification is that it assumes only two sensor inputs, which is
- our current situation. 
+ our current situation. Unlike the simplest of bangbang controllers,
+ it uses memory.
  
  NOTE: It may be reasonable to stick with this controller, but smooth
  its output with a PD or PID controller.
@@ -82,11 +83,59 @@ module bangbang_controller(input reset, clk, enable, sensor_right, sensor_left,
 			   input [5:0] speed, // I just guessed this width
 			   output signed [7:0] wheel_left, wheel_right);
 
-   // This is bangbang control. It's on or it's off. 
+   parameter LEFT = 'b10;
+   parameter RIGHT = 'b01;
+   parameter BOTH = 'b11;
 
-   // turn sharp left if both sensors are high. 
-   // TODO: add state to turn more in same direction when both sensors become high. 
-   assign wheel_left  = enable ? sensor_left  * speed * (-(sensor_left&sensor_right)) : 7'sb0;
-   assign wheel_right = enable ? sensor_right * speed : 7'sb0;
+   // States encode the sensor that is high
+   reg [1:0] state;
+   reg [1:0] next_state;
+   reg signed [2:0] ctrl_l;
+   reg signed [2:0] ctrl_r;   
    
-endmodule   
+   // TODO: add state to turn more in same direction when both sensors become high. 
+   assign wheel_left  = enable ? ctrl_l * speed : 7'sb0;
+   assign wheel_right = enable ? ctrl_r * speed : 7'sb0;
+
+   always @ (posedge clk) begin
+      if(reset)
+	state <= 0;
+      else begin
+	 next_state <= {sensor_left, sensor_right};
+	 if(state != next_state) begin
+	    // handle state transitions
+	    if(next_state == BOTH) begin
+	       if(state == LEFT) begin
+		  // hard right
+		  ctrl_r <= -1;
+		  ctrl_l <=  1;
+	       end else if(state == RIGHT) begin
+		  // hard left
+		  ctrl_r <=  1;
+		  ctrl_l <= -1;
+	       end else if(state == 0) begin
+		  // In the incredibly unlikely event of this transition, hard left. 
+		  ctrl_r <=  1;
+		  ctrl_l <= -1;
+	       end
+	    end // if (next_state == BOTH)
+	    // all remaining transitions are stateless; the previous case is irrelevant
+	    else if(next_state == 0) begin
+	       // go forward
+	       ctrl_r <= 1;
+	       ctrl_l <= 1;
+	    end else if(next_state == RIGHT) begin
+	       // turn left if right sensor is high
+	       ctrl_r <= 1;
+	       ctrl_l <= 0;
+	    end else if(next_state == LEFT) begin
+	       // turn right if left sensor is high
+	       ctrl_r <= 0;
+	       ctrl_l <= 1;
+	    end
+	    state <= next_state;
+	 end // if (state != next_state)
+      end // else: !if(reset)
+   end // always @ (posedge clk)
+endmodule // bangbang_controller
+

@@ -15,10 +15,10 @@ module bangbang_tb;
    reg [5:0] speed;
 
    // Outputs
-   reg signed [7:0] wheel_left;
-   reg signed [7:0] wheel_right;
+   wire signed [7:0] wheel_left;
+   wire signed [7:0] wheel_right;
 
-   // INstantiate the Unit Under Test
+   // Instantiate the Unit Under Test
    bangbang_controller 
      uut (
 	  .reset(reset), 
@@ -30,6 +30,10 @@ module bangbang_tb;
 	  .wheel_left(wheel_left), 
 	  .wheel_right(wheel_right));
 
+   // Variables for testing
+   integer count_speed;
+   integer count_sense;
+   
    initial forever #1  clk = ~clk;
    initial begin
       // for gtkwave simulation. 
@@ -60,12 +64,12 @@ module bangbang_tb;
       #10;
 
       // iterate through four different speeds and each sensor combinations
-      reg [1:0] sensors;
-      for(speed = 0; speed < 64; speed = speed + 8) begin
-	 for(sensors = 0; sensors < 'b11; sensors = sensors + 1) begin
+      for(count_speed = 0; count_speed < 56; count_speed = count_speed + 8) begin
+	 speed = count_speed;
+	 for(count_sense = 0; count_sense <= 'b11; count_sense = count_sense + 1) begin
 	    $display("testing sensors at speed = %d", speed);
-	    {sensor_left, sensor_right} = sensors;
-	    #10;
+	    {sensor_left, sensor_right} = count_sense[1:0];
+	    #20;
 	 end
       end
 
