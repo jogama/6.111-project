@@ -95,12 +95,16 @@ module bangbang_controller(input reset, clk, enable, sensor_right, sensor_left,
    
    // to convert positive unsigned to positive signed, just pad with a zero
    wire signed [6:0] speed_signed = {1'b0, speed};
-   assign wheel_left  = enable ? ctrl_l * speed_signed : 7'sb0;
-   assign wheel_right = enable ? ctrl_r * speed_signed : 7'sb0;
+   assign wheel_left  = enable ? ctrl_l * speed_signed : 0;
+   assign wheel_right = enable ? ctrl_r * speed_signed : 0;
 
    always @ (posedge clk) begin
-      if(reset)
-	state <= 0;
+      if(reset) begin
+	 state  <= 0;
+	 ctrl_l <= 0;
+	 ctrl_r <= 0;
+	 next_state <= 0;
+      end
       else begin
 	 next_state <= {sensor_left, sensor_right};
 	 if(state != next_state) begin

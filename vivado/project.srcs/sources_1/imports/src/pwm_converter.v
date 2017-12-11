@@ -82,21 +82,28 @@ module pwm_converter #(parameter FLIPPED=1'b0,
    //   2. prevent overflow when adding 'd60
    
    // then add 'd60
-   wire signed [5:0] wheel_cmd_fourthed = wheel_cmd >>> 2;
-   wire [6:0] duty_cycle = duty_cycle_reg;
-   reg [6:0]  duty_cycle_reg;
+   wire signed [5:0] wheel_cmd_fourthed = FLIPPED 
+	? -1 * (wheel_cmd >>> 2) 
+	: wheel_cmd >> 2;
+   wire [6:0] duty_cycle = reset ? ZERO : wheel_cmd_fourthed + ZERO;
 
    // flipping is easier with logic.
    // TODO: make this work ether combinatorially or in a single clock cycle, or just make it cleaner. 
+/* -----\/----- EXCLUDED -----\/-----
    always @ (posedge clk) begin
-      if(FLIPPED) 
-	duty_cycle_reg = ZERO - wheel_cmd_fourthed;
-//duty_cycle_reg > ZERO 
-//			  ? ZERO - wheel_cmd_fourthed
-//			  : ZERO + wheel_cmd_fourthed;
-      else
-	duty_cycle_reg <= wheel_cmd_fourthed + ZERO;
+      if(reset)
+	duty_cycle_reg <= ZERO;
+      else begin
+	 if(FLIPPED) 
+	   duty_cycle_reg = ZERO - wheel_cmd_fourthed;
+	 //duty_cycle_reg > ZERO 
+	 //			  ? ZERO - wheel_cmd_fourthed
+	 //			  : ZERO + wheel_cmd_fourthed;
+	 else
+	   duty_cycle_reg <= wheel_cmd_fourthed + ZERO;
+      end
    end
+ -----/\----- EXCLUDED -----/\----- */
    
    // later perhaps add parameters to pwm_wheel_cmd. These would be passed here to 
    pwm #(.PERIOD_WIDTH(PERIOD_WIDTH), .PERIOD(PERIOD), .ONE_PCT_PERIOD(ONE_PCT_PERIOD))
