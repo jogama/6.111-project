@@ -36,13 +36,13 @@ module nexys(
    // INSTANTIATE WIRES and REGISTERS
    wire reset, oneHz_enable, oneMHz_enable, wheel_signal_left, wheel_signal_right;
    wire [1:0] sensor_input;
-   wire [5:0] speed;
-   
+   wire [4:0] speed; // duty cycle ∈ [0,127], and 0 rotation is at 60%. speed=31 is thus max.
+    
    // ASSIGN NEXYS INPUTS AND OUTPUTS and debounce them
    assign JD[1:0] = {wheel_signal_left, wheel_signal_right};
    assign JD[3:2] = 2'bZ;
 // assign sensor_input = JD[3:2]; // we only have two sensors at the moment. 
-   assign speed = SW[5:0];
+   assign speed = SW[4:0];
   
    // HANDLE INPUTS. TODO: synchronize switches
    // wheel commands from controllers, right and left
@@ -54,6 +54,11 @@ module nexys(
 		.noisy(sensor_input[1]||BTNL), .clean(sensor_left));
    synchronize sr(.clk(clock_25mhz), .in(SW[15]), .out(reset));
 
+   pass2pwm p2p(.reset(reset), .clk(clock_25mhz), .enable(SW[11]), 
+		.one_MHz_enable(oneMHz_enable), .speed(speed),
+		.wheel_sig_left(wheel_signal_left), 
+		.wheel_sig_right(wheel_signal_right));
+   
    passthrough pt(.reset(reset), .clk(clock_25mhz), .enable(SW[12]),
 		  .speed(speed),
 		  .wheel_left(wcmd_pt_l), .wheel_right(wcmd_pt_r));
@@ -67,18 +72,18 @@ module nexys(
 	       .sensor_right(sensor_right), .sensor_left(sensor_left), .speed(speed),
 	       .wheel_left(wcmd_fwd_l), .wheel_right(wcmd_fwd_r));
 
-   wire [7:0] wcmd_sum_l = wcmd_wf_l + wcmd_fwd_l + wcmd_pt_l;
-   pwm_converter #(.FLIPPED(1))
-   converter_l (.reset(reset), .clk(clock_25mhz),
-		.one_MHz_enable(oneMHz_enable), 
-		.wheel_cmd(wcmd_sum_l),
-		.wheel_signal(wheel_signal_left));
+   // wire [7:0] wcmd_sum_l = wcmd_wf_l + wcmd_fwd_l + wcmd_pt_l;
+   // pwm_converter #(.FLIPPED(1))
+   // converter_l (.reset(reset), .clk(clock_25mhz),
+   // 		.one_MHz_enable(oneMHz_enable), 
+   // 		.wheel_cmd(wcmd_sum_l),
+   // 		.wheel_signal(wheel_signal_left));
    
-   wire [7:0] wcmd_sum_r = wcmd_wf_r + wcmd_fwd_r + wcmd_pt_r;   
-   pwm_converter converter_r(.reset(reset), .clk(clock_25mhz),
-		   .one_MHz_enable(oneMHz_enable), 
-		   .wheel_cmd(wcmd_sum_r),
-		   .wheel_signal(wheel_signal_right));
+   // wire [7:0] wcmd_sum_r = wcmd_wf_r + wcmd_fwd_r + wcmd_pt_r;   
+   // pwm_converter converter_r(.reset(reset), .clk(clock_25mhz),
+   // 		   .one_MHz_enable(oneMHz_enable), 
+   // 		   .wheel_cmd(wcmd_sum_r),
+   // 		   .wheel_signal(wheel_signal_right));
 
    // Have the 1MHz enable go high one clock cycle per microsecond
    divider #(.DIVISION_PERIOD('d25)) once_per_microsecond
@@ -86,7 +91,7 @@ module nexys(
      (.clk(clock_25mhz), .clk_divided(oneMHz_enable));
 
    // handle outputs
-   assign data = {24'hc0ffee, 2'b0, speed};   // display coffeee + speed
+   assign data = {24'hc0ffee, 3'b0, speed};   // display coffeee + speed
    assign LED16_G = sensor_left;
    assign LED17_G = sensor_right;
 /* -----\/----- EXCLUDED -----\/-----
