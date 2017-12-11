@@ -45,7 +45,8 @@ module nexys(
    assign speed = SW[5:0];
   
    // HANDLE INPUTS. TODO: synchronize switches
-   wire [7:0] wcmd_fwd_r, wcmd_fwd_l; // wheel commands from forward controller, right and left
+   wire [7:0]  wcmd_fwd_r, wcmd_fwd_l; // wheel commands from forward controller, right and left
+   wire [7:0]  wcmd_wf_r, wcmd_wf_l; // wheel commands from forward controller, right and left
    wire sensor_left, sensor_right; // We only have two sensors at the moment
    debounce srd(.reset(reset), .clock(clock_25mhz), 
 		.noisy(sensor_input[0]||BTNR), .clean(sensor_right));
@@ -53,18 +54,24 @@ module nexys(
 		.noisy(sensor_input[1]||BTNL), .clean(sensor_left));
    synchronize sr(.clk(clock_25mhz), .in(SW[15]), .out(reset));
 
-
+   wall_follow wf(.reset(reset), .clk(clock_25mhz), .enable(SW[13]), //TODO: task manager
+		  .sensor_right(sensor_right), .sensor_left(sensor_left),
+		  .sensor_wall(BTNU), .speed(speed),
+		  .wheel_left(wcmd_wf_l), .wheel_right(wcmd_wf_r));
+   
    bangbang_controller fc(.reset(reset), .clk(clock_25mhz), .enable(SW[14]),//TODO: task manager
 	       .sensor_right(sensor_right), .sensor_left(sensor_left), .speed(speed),
 	       .wheel_left(wcmd_fwd_l), .wheel_right(wcmd_fwd_r));
    
    pwm_converter converter_l(.reset(reset), .clk(clock_25mhz),
-		   .one_MHz_enable(oneMHz_enable), .wheel_cmd(wcmd_fwd_l),
+		   .one_MHz_enable(oneMHz_enable), 
+		   .wheel_cmd(wcmd_fwd_l + wcmd_wf_l),
 		   .wheel_signal(wheel_signal_left));
    
    pwm_converter converter_r(.reset(reset), .clk(clock_25mhz),
-		   .one_MHz_enable(oneMHz_enable), .wheel_cmd(wcmd_fwd_r),
-		   .wheel_signal(wheel_signal_right));   
+		   .one_MHz_enable(oneMHz_enable), 
+		   .wheel_cmd(wcmd_fwd_r + wcmd_wf_r),
+		   .wheel_signal(wheel_signal_right));
 
    // Have the 1MHz enable go high one clock cycle per microsecond
    divider #(.DIVISION_PERIOD('d25)) once_per_microsecond
@@ -75,8 +82,10 @@ module nexys(
    assign data = {24'hc0ffee, 2'b0, speed};   // display coffeee + speed
    assign LED16_G = sensor_left;
    assign LED17_G = sensor_right;
+/* -----\/----- EXCLUDED -----\/-----
    ila_0 myila(.clk(CLK100MHZ), .probe0(clock_25mhz), 
 	       .probe1({sensor_input, JD[1:0]}));
+ -----/\----- EXCLUDED -----/\----- */
    
    
 endmodule // nexys

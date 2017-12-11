@@ -11,7 +11,7 @@ VCD="$NAME.vcd"
 
 # assuming we're in directory project/tests
 iverilog -W all "$1" \
-    ../vivado/project.srcs/sources_1/imports/src/* \
+    ../vivado/project.srcs/sources_1/imports/src/*.v \
     -o "sim/$VVP"
 
 cd sim
