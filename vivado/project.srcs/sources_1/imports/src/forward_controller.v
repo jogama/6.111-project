@@ -94,7 +94,7 @@ module bangbang_controller(input reset, clk, enable, sensor_right, sensor_left,
    reg signed [2:0] ctrl_r;   
    
    // to convert positive unsigned to positive signed, just pad with a zero
-   wire signed [6:0] speed_signed = {0'b1, speed};
+   wire signed [6:0] speed_signed = {1'b0, speed};
    assign wheel_left  = enable ? ctrl_l * speed_signed : 7'sb0;
    assign wheel_right = enable ? ctrl_r * speed_signed : 7'sb0;
 

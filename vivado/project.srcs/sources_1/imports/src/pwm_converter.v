@@ -84,15 +84,16 @@ module pwm_converter #(parameter FLIPPED=1'b0,
    // then add 'd60
    wire signed [5:0] wheel_cmd_fourthed = wheel_cmd >>> 2;
    wire [6:0] duty_cycle = duty_cycle_reg;
-   wire [6:0] duty_cycle_reg;
+   reg [6:0]  duty_cycle_reg;
 
    // flipping is easier with logic.
    // TODO: make this work ether combinatorially or in a single clock cycle, or just make it cleaner. 
    always @ (posedge clk) begin
       if(FLIPPED) 
-	 duty_cycle_reg = duty_cycle_reg > ZERO 
-			  ? ZERO - duty_cycle_reg
-			  : ZERO + duty_cycle_reg;
+	duty_cycle_reg = ZERO - wheel_cmd_fourthed;
+//duty_cycle_reg > ZERO 
+//			  ? ZERO - wheel_cmd_fourthed
+//			  : ZERO + wheel_cmd_fourthed;
       else
 	duty_cycle_reg <= wheel_cmd_fourthed + ZERO;
    end
