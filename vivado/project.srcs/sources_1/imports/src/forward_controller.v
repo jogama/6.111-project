@@ -110,7 +110,7 @@ module bangbang_controller #(parameter WIDTH_SPEED=6,
 	 next_state <= 0;
       end
       else begin
-	 next_state <= {sensor_left, sensor_right};
+	 next_state <= {~sensor_left, ~sensor_right}; // I don't know why the logic is reversed...
 	 if(state != next_state) begin
 	    // handle state transitions
 	    if(next_state == BOTH) begin
