@@ -83,8 +83,19 @@ module pwm_converter #(parameter FLIPPED=1'b0,
    
    // then add 'd60
    wire signed [5:0] wheel_cmd_fourthed = wheel_cmd >>> 2;
-   wire [6:0] duty_cycle = // FLIPPED ? we aren't implementing flipped right now
-		       wheel_cmd_fourthed + ZERO;
+   wire [6:0] duty_cycle = duty_cycle_reg;
+   wire [6:0] duty_cycle_reg;
+
+   // flipping is easier with logic.
+   // TODO: make this work ether combinatorially or in a single clock cycle, or just make it cleaner. 
+   always @ (posedge clk) begin
+      if(FLIPPED) 
+	 duty_cycle_reg = duty_cycle_reg > ZERO 
+			  ? ZERO - duty_cycle_reg
+			  : ZERO + duty_cycle_reg;
+      else
+	duty_cycle_reg <= wheel_cmd_fourthed + ZERO;
+   end
    
    // later perhaps add parameters to pwm_wheel_cmd. These would be passed here to 
    pwm #(.PERIOD_WIDTH(PERIOD_WIDTH), .PERIOD(PERIOD), .ONE_PCT_PERIOD(ONE_PCT_PERIOD))
