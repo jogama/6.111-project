@@ -1,5 +1,4 @@
 /* 
- 
  The width is 16, and each entry in the memory is {wheel_command_left,
  wh_cmd_r}, where the wheel commands are eight bits each.
  
@@ -11,7 +10,9 @@
  */
 
 module rewind_controller #(parameter LOGSIZE=13,
-			   parameter WIDTH_CMD=4)
+			   parameter WIDTH_CMD=4,
+			   parameter SAMPLE_RATE=390 // in Hz
+			   )
    (input reset, clk_main, clk_sample, enable,
     input signed [WIDTH_CMD-1:0] 	 wheel_cmd, // wheel command from memory
     output [LOGSIZE-1:0] mem_addr,

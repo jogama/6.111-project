@@ -90,6 +90,9 @@ module nexys(
      // This uses a 25-bit reg when it only needs a 5-bit reg. 
      (.clk(clock_25mhz), .clk_divided(oneMHz_enable));
 
+   divider #(.DIVISION_PERIOD('d25_000_000)) once_per_second
+     (.clk(clock_25mhz), .clk_divided(oneHz_enable));
+
    // handle outputs to LEDs
    assign data = {wcmd_sum_l, wcmd_sum_r, // display the sum of the wheel commands
      wcmd_fwd_l, wcmd_fwd_r,  // wheel commands for obstacle for bangbang controller
