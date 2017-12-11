@@ -1,4 +1,4 @@
-`timescale 1ns / 1ps
+ `timescale 1ns / 1ps
 
 // modified from labkit_lab4.v
 
@@ -21,9 +21,11 @@ module nexys(
 	     output [7:0 ] AN    // Display 0-7
 	     );
    
-
+   parameter WIDTH_SPEED  = 4;
+   parameter WIDTH_WH_CMD = 4; // note that WHeel CoMmanD wires are signed. 
+    
    // create 25mhz system clock
-   wire 		    clock_25mhz;
+   wire clock_25mhz;
    clock_quarter_divider clockgen(.clk100_mhz(CLK100MHZ), .clock_25mhz(clock_25mhz));
 
    //  instantiate 7-segment display;  
@@ -36,70 +38,65 @@ module nexys(
    // INSTANTIATE WIRES and REGISTERS
    wire reset, oneHz_enable, oneMHz_enable, wheel_signal_left, wheel_signal_right;
    wire [1:0] sensor_input;
-   wire [4:0] speed; // duty cycle ∈ [0,127], and 0 rotation is at 60%. speed=31 is thus max.
+   wire [WIDTH_SPEED-1:0] speed; // duty cycle ∈ [0,127], and 0 rotation is at 60%. speed=31 is thus max.
+   wire [3:0] enables;
     
    // ASSIGN NEXYS INPUTS AND OUTPUTS and debounce them
    assign JD[1:0] = {wheel_signal_left, wheel_signal_right};
    assign JD[3:2] = 2'bZ;
-// assign sensor_input = JD[3:2]; // we only have two sensors at the moment. 
-   assign speed = SW[4:0];
+   assign sensor_input = JD[3:2]; // we only have two sensors at the moment. 
+   assign speed = SW[WIDTH_SPEED-1:0];
+   assign enables = SW[14:11];  // from MSB to LSB: bangbang, wall, passthrough, pass2pwm
   
    // HANDLE INPUTS. TODO: synchronize switches
    // wheel commands from controllers, right and left
-   wire [7:0] wcmd_fwd_r, wcmd_fwd_l, wcmd_wf_r, wcmd_wf_l, wcmd_pt_r, wmcd_pt_l; 
-   wire sensor_left, sensor_right; // We only have two sensors at the moment
+   wire signed [WIDTH_WH_CMD-1:0] wcmd_fwd_r, wcmd_fwd_l, 
+	wcmd_wf_r, wcmd_wf_l, wcmd_pt_r, wcmd_pt_l; 
+   wire sensor_left, sensor_right, sensor_wall; // We only have two sensors at the moment
    debounce srd(.reset(reset), .clock(clock_25mhz), 
 		.noisy(sensor_input[0]||BTNR), .clean(sensor_right));
    debounce sld(.reset(reset), .clock(clock_25mhz), 
 		.noisy(sensor_input[1]||BTNL), .clean(sensor_left));
+   debounce swd(.reset(reset), .clock(clock_25mhz), 
+		.noisy(BTNU), .clean(sensor_wall));
+   
    synchronize sr(.clk(clock_25mhz), .in(SW[15]), .out(reset));
 
-   pass2pwm p2p(.reset(reset), .clk(clock_25mhz), .enable(SW[11]), 
-		.one_MHz_enable(oneMHz_enable), .speed(speed),
-		.wheel_sig_left(wheel_signal_left), 
-		.wheel_sig_right(wheel_signal_right));
    
-   passthrough pt(.reset(reset), .clk(clock_25mhz), .enable(SW[12]),
+   passthrough pt(.reset(reset), .clk(clock_25mhz), .enable(enables[1]),
 		  .speed(speed),
 		  .wheel_left(wcmd_pt_l), .wheel_right(wcmd_pt_r));
       
-   wall_follow wf(.reset(reset), .clk(clock_25mhz), .enable(SW[13]), //TODO: task manager
+   wall_follow wf(.reset(reset), .clk(clock_25mhz), .enable(enables[2]), //TODO: task manager
 		  .sensor_right(sensor_right), .sensor_left(sensor_left),
-		  .sensor_wall(BTNU), .speed(speed),
+		  .sensor_wall(sensor_wall), .speed(speed),
 		  .wheel_left(wcmd_wf_l), .wheel_right(wcmd_wf_r));
    
-   bangbang_controller fc(.reset(reset), .clk(clock_25mhz), .enable(SW[14]),//TODO: task manager
-	       .sensor_right(sensor_right), .sensor_left(sensor_left), .speed(speed),
-	       .wheel_left(wcmd_fwd_l), .wheel_right(wcmd_fwd_r));
+   bangbang_controller #(.WIDTH_SPEED(WIDTH_SPEED), .WIDTH_CMD(WIDTH_WH_CMD))
+   fc(.reset(reset), .clk(clock_25mhz), .enable(enables[3]),//TODO: task manager
+      .sensor_right(sensor_right), .sensor_left(sensor_left), .speed(speed),
+      .wheel_left(wcmd_fwd_l), .wheel_right(wcmd_fwd_r));
 
-   // wire [7:0] wcmd_sum_l = wcmd_wf_l + wcmd_fwd_l + wcmd_pt_l;
-   // pwm_converter #(.FLIPPED(1))
-   // converter_l (.reset(reset), .clk(clock_25mhz),
-   // 		.one_MHz_enable(oneMHz_enable), 
-   // 		.wheel_cmd(wcmd_sum_l),
-   // 		.wheel_signal(wheel_signal_left));
-   
-   // wire [7:0] wcmd_sum_r = wcmd_wf_r + wcmd_fwd_r + wcmd_pt_r;   
-   // pwm_converter converter_r(.reset(reset), .clk(clock_25mhz),
-   // 		   .one_MHz_enable(oneMHz_enable), 
-   // 		   .wheel_cmd(wcmd_sum_r),
-   // 		   .wheel_signal(wheel_signal_right));
+   wire [WIDTH_WH_CMD-1:0] wcmd_sum_l = wcmd_wf_l + wcmd_fwd_l + wcmd_pt_l;
+   wire [WIDTH_WH_CMD-1:0] wcmd_sum_r = wcmd_wf_r + wcmd_fwd_r + wcmd_pt_r;   
+   pass2pwm p2p(.reset(reset), .clk(clock_25mhz), .enable(enables[0]), 
+		.one_MHz_enable(oneMHz_enable), .speed(speed),
+		.wheel_cmd_left(wcmd_sum_l), .wheel_cmd_right(wcmd_sum_r),
+		.wheel_sig_left(wheel_signal_left), 
+		.wheel_sig_right(wheel_signal_right));
 
    // Have the 1MHz enable go high one clock cycle per microsecond
    divider #(.DIVISION_PERIOD('d25)) once_per_microsecond
      // This uses a 25-bit reg when it only needs a 5-bit reg. 
      (.clk(clock_25mhz), .clk_divided(oneMHz_enable));
 
-   // handle outputs
-   assign data = {24'hc0ffee, 3'b0, speed};   // display coffeee + speed
+   // handle outputs to LEDs
+   assign data = {wcmd_sum_l, wcmd_sum_r, // display the sum of the wheel commands
+     wcmd_fwd_l, wcmd_fwd_r,  // wheel commands for obstacle for bangbang controller
+     wcmd_wf_l,  wcmd_wf_r, 3'h0, speed};   // wcmd for wall following + speed
    assign LED16_G = sensor_left;
    assign LED17_G = sensor_right;
-/* -----\/----- EXCLUDED -----\/-----
-   ila_0 myila(.clk(CLK100MHZ), .probe0(clock_25mhz), 
-	       .probe1({sensor_input, JD[1:0]}));
- -----/\----- EXCLUDED -----/\----- */
-   
-   
+   assign LED[15:0] = {16{sensor_wall}}; 
 endmodule // nexys
 
 module clock_quarter_divider(input clk100_mhz, output reg clock_25mhz = 0);

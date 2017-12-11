@@ -1,7 +1,10 @@
-module wall_follow #(parameter TURN_DIFF=16, WALL_ON_RIGHT=1)
+module wall_follow #(parameter TURN_DIFF=16, 
+		     WALL_ON_RIGHT=1,
+		     parameter WIDTH_SPEED=4,
+		     parameter WIDTH_CMD=4)
    (input reset, clk, enable, sensor_left, sensor_right, sensor_wall,
-    input [5:0] 	speed, 
-    output signed [7:0] wheel_left, wheel_right);
+    input [WIDTH_SPEED-1:0] 	speed, 
+    output signed [WIDTH_CMD-1:0] wheel_left, wheel_right);
 
    assign wheel_left  = enable ? wl : 0;
    assign wheel_right = enable ? wr : 0;

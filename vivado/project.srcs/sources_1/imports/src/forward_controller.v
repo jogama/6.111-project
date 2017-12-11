@@ -25,11 +25,13 @@ inputs:
      servos
  */ 
 
-module forward_controller #(parameter SENSOR_COUNT='d2)
+module forward_controller #(parameter SENSOR_COUNT='d2,
+			    parameter WIDTH_SPEED=6, 
+			    parameter WIDTH_CMD=8)
    (input reset, clk, enable,
-    input [SENSOR_COUNT:0] speed, // TODO: this is not the correct width. See speed description above. 
+    input [WIDTH_SPEED-1:0]   speed, // TODO: this is not the correct width. See speed description above. 
     input [SENSOR_COUNT-1:0] sensor_array,
-    output reg signed [7:0]  wheel_left, wheel_right);
+    output reg signed [WIDTH_CMD-1:0]  wheel_left, wheel_right);
 
    parameter SENSOR_MIDDLE = (SENSOR_COUNT >> 1) + SENSOR_COUNT[0];
    reg [SENSOR_MIDDLE:0]     index = 0; // we only need log2(SENSOR_MIDDLE) = width(SENSOR_COUNT) - 1
@@ -79,9 +81,11 @@ endmodule // forward_controller
  its output with a PD or PID controller.
   */
 
-module bangbang_controller(input reset, clk, enable, sensor_right, sensor_left,
-			   input [5:0] speed, // I just guessed this width
-			   output signed [7:0] wheel_left, wheel_right);
+module bangbang_controller #(parameter WIDTH_SPEED=6,
+			     parameter WIDTH_CMD=8)
+   (input reset, clk, enable, sensor_right, sensor_left,
+    input [WIDTH_SPEED-1:0] speed, 
+    output signed [WIDTH_CMD-1:0] wheel_left, wheel_right);
 
    parameter LEFT = 'b10;
    parameter RIGHT = 'b01;
