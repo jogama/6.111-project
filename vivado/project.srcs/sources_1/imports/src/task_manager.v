@@ -3,13 +3,12 @@ module task_manager #(parameter RECORD_TIME=15, // in seconds
 		      parameter WIDTH_CMD=4
 		      )
    (input reset, start, clk, oneHz_enable, 
-    input [WIDTH_CMD-1:0] wheel_cmd_left, wheel_cmd_right,
-    output reg enable_forward, enable_rewind);
+    output reg enable_forward, 
+    output reg [1:0] state); // used by rewind_controller
    
    parameter IDLE    = 'b00;
    parameter FORWARD = 'b01;
    parameter REWIND  = 'b11;
-   reg [1:0] 		 state;
    reg [LOG_REC_TIME-1:0] count;
    
    always @ (posedge clk) begin
@@ -17,7 +16,6 @@ module task_manager #(parameter RECORD_TIME=15, // in seconds
 	 state <= 0;
 	 count <= 0;
 	 enable_forward <= 0;
-	 enable_rewind  <= 0;
       end      
       else if(~reset) begin
 	 case(state)
@@ -25,12 +23,10 @@ module task_manager #(parameter RECORD_TIME=15, // in seconds
 	   IDLE: begin
 	      if(start) state <= FORWARD;
 	      enable_forward <= 0;
-	      enable_rewind  <= 0;
 	   end
 	   FORWARD: begin
 	      count <= count + oneHz_enable; // oneHz_enable *should* be high for only one clk...
 	      enable_forward <= 1;
-	      enable_rewind  <= 0;
 
 	      // Transition to REWIND
 	      if(count == RECORD_TIME) begin
@@ -41,7 +37,6 @@ module task_manager #(parameter RECORD_TIME=15, // in seconds
 	   REWIND: begin
 	      count <= count + oneHz_enable; // see insecurity above
 	      enable_forward <= 0;
-	      enable_rewind  <= 1;
 
 	      // Transition to IDLE
 	      if(count == RECORD_TIME) begin

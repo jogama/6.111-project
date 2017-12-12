@@ -13,12 +13,60 @@ module rewind_controller #(parameter LOGSIZE=13,
 			   parameter WIDTH_CMD=4,
 			   parameter SAMPLE_RATE=390 // in Hz
 			   )
-   (input reset, clk_main, clk_sample, enable,
-    input signed [WIDTH_CMD-1:0] 	 wheel_cmd, // wheel command from memory
-    output [LOGSIZE-1:0] mem_addr,
-    output signed [WIDTH_CMD-1:0]  wheel_left, wheel_right);
-			   
-endmodule   
+   (input reset, clk, 
+    input [1:0] state, 
+    input signed [WIDTH_CMD-1:0] wcmd_in_l, wcmd_in_r, // wheel command from memory
+    output reg signed [WIDTH_CMD-1:0]  wheel_left, wheel_right);
+   
+   // STATES 
+   parameter IDLE    = 'b00;
+   parameter FORWARD = 'b01;
+   parameter REWIND  = 'b11;
+
+   // CLOCKING FOR DOWNSAMPLING
+   wire clk_sample; // If this doesn't work, use a counter
+   divider #(.DIVISION_PERIOD(SAMPLE_RATE))
+	     divided_sampling_clk(.clk(clk), .clk_divided(clk_sample));
+
+   // SET UP MEMORY
+   parameter WIDTH_MEM = WIDTH_CMD * 2;
+   reg [LOGSIZE-1:0] address = 0;
+   reg mem_is_full;
+   wire [WIDTH_MEM-1:0] mem_in, mem_out;
+   mybram #(.LOGSIZE(LOGSIZE), .WIDTH(WIDTH_MEM))
+   samples(.addr(address), .clk(clk), .we(state == FORWARD),
+	   .din(mem_in), .dout(mem_out));
+   assign mem_in  = {wcmd_in_l, wcmd_in_r};
+   
+   // If we're moving forward, record the wheel commands
+   always @ (posedge clk_sample) begin
+      if(state == FORWARD && ~mem_is_full) 
+	 address <= address + 1;
+   end
+
+   always @ (posedge clk) begin
+      if(reset) begin
+	 address <= 0;
+	 wheel_left  <= 0;
+	 wheel_right <= 0;
+	 // check later how/whether to reset the memory
+      end
+      else if(~reset) begin
+	 if(state == IDLE) begin
+	    address <= 0;
+	    mem_is_full <= 0;
+	 end
+	 else if(state == REWIND) begin
+	    // reverse the motor commands
+	    wheel_left  <= -1 * mem_out[WIDTH_MEM-1:WIDTH_CMD];
+	    wheel_right <= -1 * mem_out[WIDTH_CMD-1:0];
+	 end
+
+	 // Memory is full once address reaches its maximum
+	 if(&address) mem_is_full <= 1;
+      end // if (~reset)
+   end // always @ (posedge clk)
+endmodule
 
 /* 
   Module written by staff for lab5
