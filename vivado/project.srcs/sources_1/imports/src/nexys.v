@@ -73,14 +73,9 @@ module nexys(
 			.state(task_man_state),
 			.wcmd_in_l(wcmd_sum_l), .wcmd_in_r(wcmd_sum_r),
 			.wheel_left(wcmd_rwd_l), .wheel_right(wcmd_rwd_r));
-			
-   wall_follow wf(.reset(reset), .clk(clock_25mhz), .enable(enable_fwd), 
-		  .sensor_right(sensor_right), .sensor_left(sensor_left),
-		  .sensor_wall(sensor_wall), .speed(speed),
-		  .wheel_left(wcmd_wf_l), .wheel_right(wcmd_wf_r));
    
    bangbang_controller #(.WIDTH_SPEED(WIDTH_SPEED), .WIDTH_CMD(WIDTH_WH_CMD))
-   fc(.reset(reset), .clk(clock_25mhz), .enable(enables[3]),
+   fc(.reset(reset), .clk(clock_25mhz), .enable(enable_fwd),
       .sensor_right(sensor_right), .sensor_left(sensor_left), .speed(speed),
       .wheel_left(wcmd_fwd_l), .wheel_right(wcmd_fwd_r));
 
@@ -113,7 +108,11 @@ module nexys(
    
    assign LED16_G = sensor_left;
    assign LED17_G = sensor_right;
-   assign LED[15:0] = {16{sensor_wall}}; 
+   assign LED[15] = {16{sensor_wall}};
+   assign LED[1:0] = task_man_state; // having issues outputing to the segment display
+   assign JA[0] = oneHz_enable;
+   assign JA[1] = oneMHz_enable;
+   
 endmodule // nexys
 
 module clock_quarter_divider(input clk100_mhz, output reg clock_25mhz = 0);

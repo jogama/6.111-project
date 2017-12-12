@@ -19,7 +19,7 @@ module rewind_controller #(parameter LOGSIZE=13,
     output reg signed [WIDTH_CMD-1:0]  wheel_left, wheel_right);
    
    // STATES 
-   parameter IDLE    = 'b00;
+   parameter IDLE    = 'b10;
    parameter FORWARD = 'b01;
    parameter REWIND  = 'b11;
 

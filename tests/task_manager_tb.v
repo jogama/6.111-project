@@ -30,7 +30,10 @@ module task_manager_tb;
 	  );
 
    initial forever #1  clk = ~clk;
-   initial forever #100 oneHz_enable = ~oneHz_enable; // this fine for simulation
+
+   divider #(.DIVISION_PERIOD('d100)) once_per_second
+     (.clk(clk), .clk_divided(oneHz_enable));
+
    initial begin
       // for gtkwave simulation
       $dumpfile("task_manager_tb.vcd");
@@ -51,7 +54,7 @@ module task_manager_tb;
       #2;
       start = 0;
       
-      #3500;
+      #10000;
       
       // we're done!
       $stop();
