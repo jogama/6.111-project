@@ -106,9 +106,11 @@ module nexys(
      (.clk(clock_25mhz), .clk_divided(oneHz_enable));
 
    // handle outputs to LEDs
-   assign data = {wcmd_sum_l, wcmd_sum_r, // display the sum of the wheel commands
-     wcmd_fwd_l, wcmd_fwd_r,  // wheel commands for obstacle for bangbang controller
-     wcmd_wf_l,  wcmd_wf_r, 3'h0, speed};   // wcmd for wall following + speed
+   assign data = //{wcmd_sum_l, wcmd_sum_r, // display the sum of the wheel commands
+//     wcmd_fwd_l, wcmd_fwd_r,  // wheel commands for obstacle for bangbang controller
+  //   wcmd_wf_l,  wcmd_wf_r, 6'b0, task_man_state, 3'h0, speed};   // wcmd for wall following + speed
+   {32'h0, 2'b0, task_man_state};
+   
    assign LED16_G = sensor_left;
    assign LED17_G = sensor_right;
    assign LED[15:0] = {16{sensor_wall}}; 
