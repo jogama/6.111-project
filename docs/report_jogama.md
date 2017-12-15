@@ -1,11 +1,3 @@
-,* this is the story of my git commits
-  * git gave me some peace of mind. While I was fastly coding the day
-    of the presentation, I was able to get to a point where
-    *something* worked! I committed, and kept going. Turns out that
-    the things I did just broke the system. When presentation time
-    came, I rolled back to the working commit, and presented what did
-    work.
-  
 * have a workflow section. You made many testbenches during your nexys-less days. Elaborate on gtkwave, emacs macros vs ISE for tedious testbenchmaking
 
 * I think this would be better done in chronological order, with a tools used section at the end. 
@@ -23,11 +15,6 @@
 it can react to things directly in front of it
 
 # development style
-* git 
-  - I didn't use git's features until the very end, was at 4fde46c and
-	rolled back to 0f8cb24 to present. It gave me peace of mind, for
-	sure, that none of my gains would be lost.
-  - It worked as a log book. Decent amount of this report came forom $ git log
 
 # Score distribution
 * Technical content - overview/motivation
@@ -109,8 +96,28 @@ simulation was interesting. Initially it didn't work, as 1hz enable was high for
 
 ## what tools I used and problems not related to verilog found in this porject
 bruh. i used tools. 
-* git for source control and maintaining logs of what I've done.
 * emacs macros / ISE for making testbenches less tedious. 
 * iverilog+gtkwave+runtest.sh was a cool thing I had going
 
-Vivado is certainly much nicer than ISE. However, I 
+  * git gave me some peace of mind. While I was fastly coding the day
+    of the presentation, I was able to get to a point where
+    *something* worked! I committed, and kept going. Turns out that
+    the things I did just broke the system. When presentation time
+    came, I rolled back to the working commit, and presented what did
+    work.
+  - I didn't use git's features until the very end, was at 4fde46c and
+	rolled back to 0f8cb24 to present. It gave me peace of mind, for
+	sure, that none of my gains would be lost.
+  - It worked as a log book. Decent amount of this report came forom $ git log
+
+Once I had written a testbench I wanted to run it as quickly as possible whenever I modified the corresponding module. For other labs, I would use ISE. For this one, I would use GTKWave. This is an open source visualization tool that can be used with verilog dumpfiles. It exists for windows, linux, and mac, [I THINK?]. It's a bit quirky, but it works pretty well, and outside of lab. 
+
+Still, Ie found it quite slow to run the sequence of commands necessary to run a simulation, so I wrote the script runtest.sh, located under the tests directory. It's pretty nice. All I had to do was run 
+
+    $ ./runtest.sh foo_tb.v
+	
+And I'd get my visualization. 
+
+As for making the testbenches, I initially would open ISE and have it autogenerate them for me. I eventually tired of this, and used emacs macros to speed up writing the testbenches by hand. While vivado is certainly nice, I already use emacs for everything as it is and typed all my *.v there. 
+
+
