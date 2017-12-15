@@ -1,0 +1,4 @@
+*.svg
+
+# generated with $ git log > gitlog.txt
+gitlog.txt
