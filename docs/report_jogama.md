@@ -47,9 +47,7 @@ I soldered them to included pins and stuck them onto a breadboard [INSERT THE VE
 ## Debouncer and Syncronizer
 These were both from lab4.  and written by the staff. Debouncer makes sure a single button press is doesn't look like many, and the synchroniser avoides metatstability for the switches controlling speed. 
 
-
-
-## PWM converter
+`## PWM converter
 Two modules: pass2pwm and pwm. pass2pwm took 
 ### module pwm and the servos used
 tried testing with oscilloscope with unclear results. Made a testbench using ISE because i was too lazy to finish tbgen.py. Had issues having multiple clocks in the testbench.
@@ -74,7 +72,7 @@ pwm\_converter tried to convert between wheel commands [WHAT'S A WHEEL COMMAND?]
 
 pass2pwm had more success by reducing the width of speed and wcmd such that their product would never not overflow in the duty cycle. Signage was succesfully used here to clearly flip one of the motors. 
 
-There were still issues. [SEE HERE] One of them worked in simulation. However, irl, the wheel's speed variation was either maximum or off. idk why this was so.
+There were still issues. [SEE HERE] One of them worked in simulation. However, irl, the wheel's speed variation was either maximum or off. This is likely because, while pass2pwm did work, it also multiplied the wheel cmd by speed when in the forward forward controller this was already done. It was getting speed squared, capped by a check in software to make sure
 
 both modules, upon calulating the duty cycle, passed it to the pwm module. 
 
