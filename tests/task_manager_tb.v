@@ -12,7 +12,7 @@ module task_manager_tb;
    reg reset;
    reg start;
    reg clk;
-   reg oneHz_enable;
+   wire oneHz_enable;
 
    // Outputs
    wire enable_forward;
@@ -41,7 +41,6 @@ module task_manager_tb;
       
       // Initialize Inputs
       clk = 0;
-      oneHz_enable = 0;
       start = 0;
       reset = 1;
 

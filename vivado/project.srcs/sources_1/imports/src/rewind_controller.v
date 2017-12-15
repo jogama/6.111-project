@@ -41,7 +41,9 @@ module rewind_controller #(parameter LOGSIZE=13,
    // If we're moving forward, record the wheel commands
    always @ (posedge clk_sample) begin
       if(state == FORWARD && ~mem_is_full) 
-	 address <= address + 1;
+	address <= address + 1;
+      else if (state == REVERSE && address > 0)
+	address <= address - 1;
    end
 
    always @ (posedge clk) begin
