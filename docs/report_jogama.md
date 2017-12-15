@@ -1,10 +1,3 @@
-* have a workflow section. You made many testbenches during your nexys-less days. Elaborate on gtkwave, emacs macros vs ISE for tedious testbenchmaking
-
-* I think this would be better done in chronological order, with a tools used section at the end. 
-
-
-
-
 # what was the robot meant to do?
 * avoid obstacles for set time t
 * stop after time t
@@ -14,18 +7,7 @@
 # what can the robot do
 it can react to things directly in front of it
 
-# development style
-
-# Score distribution
-* Logical, readable diagrams and timing (if appropriate)
-  - original block diagram vs block diagram of what actually happened
-* Discussion on tricky circuits/challenges/measurments of interesting signals (if appropriate)
-  - one interesting signal is a glitch that I ignored 
-* Lessons learned, advice for the future projects
-
-
 # Files to include: *.v, *.xdc, CAD as one zip
-
 
 # Introduction
 I was going to make a robot that could do rewind and imlement these modules 
@@ -127,7 +109,7 @@ bruh. i used tools.
 	sure, that none of my gains would be lost.
   - It worked as a log book. Decent amount of this report came forom $ git log
 
-Once I had written a testbench I wanted to run it as quickly as possible whenever I modified the corresponding module. For other labs, I would use ISE. For this one, I would use GTKWave. This is an open source visualization tool that can be used with verilog dumpfiles. It exists for windows, linux, and mac, [I THINK?]. It's a bit quirky, but it works pretty well, and outside of lab. 
+Once I had written a testbench I wanted to run it as quickly as possible whenever I modified the corresponding module. For other labs, I would use ISE. For this one, I would use GTKWave. This is an open source waveform viewer that can be used with verilog dumpfiles. It exists for windows, linux, and mac. It's a bit quirky, but it reliably well, and outside of lab. 
 
 Still, Ie found it quite slow to run the sequence of commands necessary to run a simulation, so I wrote the script runtest.sh, located under the tests directory. It's pretty nice. All I had to do was run 
 
@@ -137,4 +119,4 @@ And I'd get my visualization.
 
 As for making the testbenches, I initially would open ISE and have it autogenerate them for me. I eventually tired of this, and used emacs macros to speed up writing the testbenches by hand. While vivado is certainly nice, I already use emacs for everything as it is and typed all my *.v there. 
 
-
+Oh, I also used a laser cutter, because I fried a nexys. Cardboard would have sufficed, but hey! I can laser cut now! Really, the Cypress lab is awesome. It would be good to mention it as final projects begin, alongside the demos. I initially thought that if I wanted to 3d print a chassis, I'd need to pay copytech; I wasn't aware that I'd have access to a 3d printer myself through EDS. The obvious advice is to be more paranoid whenever your electronics are close to metal. 
