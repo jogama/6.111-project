@@ -1,4 +1,0 @@
-*.svg
-*.png
-# generated with $ git log > gitlog.txt
-gitlog.txt
